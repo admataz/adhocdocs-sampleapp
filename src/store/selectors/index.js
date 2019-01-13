@@ -1,27 +1,70 @@
 import { createSelector } from 'reselect'
 // import { intersection, groupBy, find, uniq, mapValues, sortBy } from 'lodash'
+import { groupBy, intersection, sortBy } from 'lodash'
 
-const getConfig = state => state.config
-export const getConfigApiBaseUrl = createSelector([getConfig], ({apiBaseUrl}) => apiBaseUrl)
-export const getConfigFilterNames = createSelector([getConfig], ({filters}) => filters)
-export const getConfigDocumentNames = createSelector([getConfig], ({documents}) => documents)
+export const getConfig = state => state.config
+export const getConfigApiBaseUrl = createSelector(
+  [getConfig],
+  ({ apiBaseUrl }) => apiBaseUrl
+)
+export const getConfigFilterNames = createSelector(
+  [getConfig],
+  ({ filters }) => filters
+)
+export const getConfigDocumentNames = createSelector(
+  [getConfig],
+  ({ documents }) => documents
+)
 
+export const getConfigRelatedNames = createSelector(
+  [getConfig],
+  ({ related }) => related
+)
 
+export const getAllData = state => state.data
 
-/*
-const filtered = state => {
-  const selectedFilters = selectedFiltersList(state)
-  if (!selectedFilters.length) {
-    return []
+export const getAllFilters = createSelector(
+  [getAllData],
+  ({ filters }) => sortBy(filters, 'content.title')
+)
+
+export const getGroupedFilters = createSelector(
+  [getAllFilters],
+  filters => groupBy(filters, 'schema')
+)
+
+export const getAppData = state => state.app
+
+export const getSelectedFilters = createSelector(
+  [getAppData],
+  ({ selectedFilters }) => selectedFilters
+)
+
+export const getAllDocuments = createSelector(
+  [getAllData],
+  ({ documents }) => documents
+)
+
+export const getFilteredDocuments = createSelector(
+  [getSelectedFilters, getConfigDocumentNames, getConfigFilterNames, getAllDocuments],
+  (selectedFilters, documentNames, filterNames, documents) => {
+    if (!selectedFilters.length) {
+      return []
+    }
+    return documents
+      .filter(d => documentNames.map(dn => dn.id).includes(d.schema))
+      .filter(d => {
+        const documentRelations = filterNames.reduce((acc, curr) => [...acc, ...d.related[curr.id]], [])
+        return intersection(selectedFilters, documentRelations).length === selectedFilters.length
+      })
   }
-  return state.relationships
-    .filter(r => r.r)
-    .filter(itm => intersection([...selectedFilters], [...itm.r]).length === selectedFilters.length)
-}
+)
 
-const documentsBySchema = state => groupBy(sortBy(state.documents, 'content.title'), 'schema_name')
-
-const filters = state => state.filters || []
-const byId = state => id => find(state.documents, { id })
-*/
-
+export const getAvailableFilters = createSelector(
+  [getFilteredDocuments, getConfigFilterNames],
+  (documents, filterNames) =>
+    documents.reduce((allFilters, d) => {
+      const docFilters = filterNames.reduce((acc, curr) => [...acc, ...d.related[curr.id]], [])
+      return [...allFilters, ...docFilters]
+    }, [])
+)
