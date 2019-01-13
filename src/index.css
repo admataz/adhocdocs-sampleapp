@@ -1,6 +1,11 @@
+html{
+  height:100%;
+}
+
 body {
   margin: 0;
   padding: 0;
+  height: 100%;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -11,4 +16,23 @@ body {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+#root, .app-wrapper{
+  height: 100%;
+}
+
+.app-wrapper{
+  display: flex;
+  flex-direction: column;
+}
+
+.main{
+  flex-grow: 1;
+}
+
+.footer{
+  flex-shrink: 0;
+  text-align: right;
+  border-top: 1px solid #000;
 }
