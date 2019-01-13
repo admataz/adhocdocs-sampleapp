@@ -2,10 +2,10 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 
 const FilterPanel = ({ availableTags, availableTaxonomies, groupedTags, selectedTags }) => (
-  <>
+  <div className="sticky-top">
     {availableTaxonomies.map(t => (
       <div className="taxonomy-group" key={t.id}>
-        <h3>{t.id}</h3>
+        <h3>{`${t.id.charAt(0).toUpperCase()}${t.id.slice(1)}`}</h3>
         <div>
           {groupedTags[t.id].map(tag => {
             let selectedClass = ''
@@ -29,8 +29,8 @@ const FilterPanel = ({ availableTags, availableTaxonomies, groupedTags, selected
             link = tagsForPath.join('/')
             return (
               <Link
-                to={`/${link}`}
-                className={`btn btn-sm ${selectedClass} ${disabledClass} ${availableClass}`}
+                to={`/content/${link}`}
+                className={`ml-1 mt-1 btn btn-sm ${selectedClass} ${disabledClass} ${availableClass}`}
                 key={tag.slug}
               >
                 {tag.content.title}
@@ -40,7 +40,7 @@ const FilterPanel = ({ availableTags, availableTaxonomies, groupedTags, selected
         </div>
       </div>
     ))}
-  </>
+  </div>
 )
 
 export default FilterPanel

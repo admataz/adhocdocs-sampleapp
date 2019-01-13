@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 // import { intersection, groupBy, find, uniq, mapValues, sortBy } from 'lodash'
-import { groupBy, intersection, sortBy } from 'lodash'
+import { find, groupBy, intersection, sortBy } from 'lodash'
 
 export const getConfig = state => state.config
 export const getConfigApiBaseUrl = createSelector(
@@ -40,9 +40,19 @@ export const getSelectedFilters = createSelector(
   ({ selectedFilters }) => selectedFilters
 )
 
+export const getSelectedDocument = createSelector(
+  [getAppData],
+  ({ selectedDocument }) => selectedDocument
+)
+
 export const getAllDocuments = createSelector(
   [getAllData],
   ({ documents }) => documents
+)
+
+export const getCurrentDocument = createSelector(
+  [getAllDocuments, getSelectedDocument],
+  (documents, { schema, slug }) => find(documents, { schema, slug })
 )
 
 export const getFilteredDocuments = createSelector(

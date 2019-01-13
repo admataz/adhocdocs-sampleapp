@@ -17,6 +17,8 @@ async function init() {
   await store.dispatch(actions.fetchFilters())
   await store.dispatch(actions.fetchAllDocuments())
 
+  await store.dispatch(actions.appLocationChanged(history.location.pathname))
+
   history.listen(({ pathname }) => {
     store.dispatch(actions.appLocationChanged(pathname))
   })

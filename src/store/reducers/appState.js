@@ -9,7 +9,15 @@ const makeAppState = (state = defaultAppState, { type, payload }) => {
   const stateCopy = { ...state }
   switch (type) {
     case APP_LOCATION_CHANGED:
-      stateCopy.selectedFilters = uniq(payload.split('/').filter(i => i))
+      const params = uniq(payload.split('/').filter(i => i))
+      if (params[0] === 'content') {
+        stateCopy.selectedFilters = params.splice(1)
+      }
+
+      if (params[0] === 'view') {
+        stateCopy.selectedDocument = { schema: params[1], slug: params[2] }
+      }
+
       return stateCopy
     default:
       return state

@@ -1,15 +1,14 @@
 import React from 'react'
-import DocumentItem from '../DocumentItem'
+import { Link } from 'react-router-dom'
 const DocumentList = ({ filteredDocuments }) => (
-  <div className="container">
-    <h3>Results</h3>
-    <ul>
+  <div className="container m-4">
+    <div className="list-group">
       {filteredDocuments.map(d => (
-        <li>
-          <DocumentItem key={d.slug} document={d} />
-        </li>
+        <Link to={`/view/${d.schema}/${d.slug}`} key={d.slug} className="list-group-item list-group-item-action">
+          {d.content.title}
+        </Link>
       ))}
-    </ul>
+    </div>
   </div>
 )
 
